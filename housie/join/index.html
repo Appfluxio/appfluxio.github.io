@@ -1,64 +1,82 @@
-<a id="openBtn" href="housie://join" class="btn">OPEN GAME</a>
-    <div class="status-container" id="loader-area">
-        <div class="loader"></div>
-        <span class="status-text">Verifying application...</span>
-    </div>
-    <div id="store-links">
-        <p style="margin-bottom: 15px;">App not installed? Download it below:</p>
-        <a id="play-store" href="#" class="store-btn">GET IT ON Google Play</a>
-        <a id="app-store" href="#" class="store-btn">Download on App Store</a>
-    </div>
-    <div class="footer-text">
-        Join the ultimate Tambola experience.
+<a id="openBtn" href="housie://join" class="main-btn">
+            <span>OPEN IN HOUSIE</span>
+        </a>
+        <div class="loading-area" id="loader">
+            <div class="spinner"></div>
+            <div class="loading-text">Verifying Link...</div>
+        </div>
+        <div class="store-section" id="store">
+            <div class="store-title">App not found?</div>
+            <div class="badge-grid">
+                <!-- Google Play Badge -->
+                <a id="play-store" href="#" target="_blank">
+                    <img class="badge-img" src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play">
+                </a>
+                <!-- Apple App Store Badge -->
+                <a id="app-store" href="#" target="_blank">
+                    <img class="badge-img" src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="Download on the App Store">
+                </a>
+            </div>
+        </div>
+        <div class="footer">
+            Professional Tambola & Bingo Experience. Built with ❤️ by Applaytech.
+        </div>
     </div>
 </div>
 <script>
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     const playStoreUrl = "https://play.google.com/store/apps/details?id=com.applaytechHousie";
-    const appStoreUrl = "https://apps.apple.com/app/idYOUR_APP_ID";
+    const appStoreUrl = "https://apps.apple.com/app/idYOUR_APP_ID"; // Replace with real ID
     
-    let appOpened = false;
-    // Detect if user leaves the tab (means app probably opened)
-    window.addEventListener('blur', () => {
-        appOpened = true;
-        document.getElementById('loader-area').style.display = 'none';
+    let redirected = false;
+    // Detect if app opens (tab becomes hidden)
+    document.addEventListener("visibilitychange", function() {
+        if (document.hidden) {
+            redirected = true;
+            document.getElementById('loader').style.display = 'none';
+        }
     });
-    function attemptOpen() {
-        if (!code) return;
+    function handleRedirection() {
+        if (!code) {
+            showError("No join code found. Please check your link.");
+            return;
+        }
         const deepLink = `housie://join?code=${code}`;
         document.getElementById('openBtn').href = deepLink;
         
-        // Attempt to open
+        // 1. Initial attempt
         window.location.href = deepLink;
-        // Wait and check if we are still here
+        // 2. Wait and check
         setTimeout(() => {
-            if (!appOpened) {
-                showFallbacks();
+            if (!redirected && !document.hidden) {
+                showStoreLinks();
             }
         }, 3000);
     }
-    function showFallbacks() {
-        document.getElementById('loader-area').style.display = 'none';
-        document.getElementById('desc').innerText = "We couldn't open the app automatically.";
-        document.getElementById('store-links').style.display = 'block';
+    function showStoreLinks() {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('desc').innerText = "Looks like you don't have the app yet.";
+        document.getElementById('store').style.display = 'block';
         
-        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        if (/android/i.test(userAgent)) {
+        const ua = navigator.userAgent || navigator.vendor || window.opera;
+        const isAndroid = /android/i.test(ua);
+        const isiOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+        if (isAndroid) {
             document.getElementById('play-store').href = playStoreUrl;
             document.getElementById('app-store').style.display = 'none';
-        } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        } else if (isiOS) {
             document.getElementById('app-store').href = appStoreUrl;
             document.getElementById('play-store').style.display = 'none';
         } else {
             document.getElementById('play-store').href = playStoreUrl;
+            document.getElementById('app-store').href = appStoreUrl;
         }
     }
-    // Initialize
-    if (code) {
-        attemptOpen();
-    } else {
-        document.getElementById('loader-area').style.display = 'none';
-        document.getElementById('desc').innerText = "Join code is missing. Please check your link.";
+    function showError(msg) {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('desc').innerText = msg;
     }
+    // Start
+    window.onload = handleRedirection;
 </script>
