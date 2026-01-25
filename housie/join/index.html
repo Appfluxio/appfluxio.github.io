@@ -1,43 +1,64 @@
-<div id="loaderArea">
-        <div class="loader"></div> <span style="color: #888;">Checking app...</span>
+<a id="openBtn" href="housie://join" class="btn">OPEN GAME</a>
+    <div class="status-container" id="loader-area">
+        <div class="loader"></div>
+        <span class="status-text">Verifying application...</span>
     </div>
-    <a id="openBtn" href="housie://join" class="btn">OPEN MANUALLY</a>
-    
-    <div id="status">Connecting to game...</div>
-    
-    <p style="margin-top: 50px; color: #999; font-size: 0.8em;">
-        If the app isn't installed, you will be redirected to the Store automatically.
-    </p>
+    <div id="store-links">
+        <p style="margin-bottom: 15px;">App not installed? Download it below:</p>
+        <a id="play-store" href="#" class="store-btn">GET IT ON Google Play</a>
+        <a id="app-store" href="#" class="store-btn">Download on App Store</a>
+    </div>
+    <div class="footer-text">
+        Join the ultimate Tambola experience.
+    </div>
 </div>
 <script>
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     const playStoreUrl = "https://play.google.com/store/apps/details?id=com.applaytechHousie";
-    const appStoreUrl = "https://apps.apple.com/app/idYOUR_APP_ID"; // Replace with your real ID later
+    const appStoreUrl = "https://apps.apple.com/app/idYOUR_APP_ID";
     
-    function getStoreUrl() {
-        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        if (/android/i.test(userAgent)) return playStoreUrl;
-        if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) return appStoreUrl;
-        return playStoreUrl; // Default
-    }
-    if (code) {
+    let appOpened = false;
+    // Detect if user leaves the tab (means app probably opened)
+    window.addEventListener('blur', () => {
+        appOpened = true;
+        document.getElementById('loader-area').style.display = 'none';
+    });
+    function attemptOpen() {
+        if (!code) return;
         const deepLink = `housie://join?code=${code}`;
         document.getElementById('openBtn').href = deepLink;
-        // Try to open the app
+        
+        // Attempt to open
         window.location.href = deepLink;
-        // Fallback Logic:
-        // If the user is still on this page after 2.5 seconds, redirect to Store
-        setTimeout(function() {
-            if (!document.hidden) {
-                document.getElementById('status').innerText = "App not found. Redirecting to Store...";
-                setTimeout(() => {
-                    window.location.href = getStoreUrl();
-                }, 1000);
+        // Wait and check if we are still here
+        setTimeout(() => {
+            if (!appOpened) {
+                showFallbacks();
             }
-        }, 2500);
+        }, 3000);
+    }
+    function showFallbacks() {
+        document.getElementById('loader-area').style.display = 'none';
+        document.getElementById('desc').innerText = "We couldn't open the app automatically.";
+        document.getElementById('store-links').style.display = 'block';
+        
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        if (/android/i.test(userAgent)) {
+            document.getElementById('play-store').href = playStoreUrl;
+            document.getElementById('app-store').style.display = 'none';
+        } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+            document.getElementById('app-store').href = appStoreUrl;
+            document.getElementById('play-store').style.display = 'none';
+        } else {
+            document.getElementById('play-store').href = playStoreUrl;
+        }
+    }
+    // Initialize
+    if (code) {
+        attemptOpen();
     } else {
-        document.getElementById('status').innerText = "Waiting for game code...";
-        document.getElementById('loaderArea').style.display = 'none';
+        document.getElementById('loader-area').style.display = 'none';
+        document.getElementById('desc').innerText = "Join code is missing. Please check your link.";
     }
 </script>
