@@ -175,68 +175,71 @@
   </div>
 
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const code = params.get("code");
+const params = new URLSearchParams(window.location.search);
+const code = params.get("code");
 
-  const playStoreUrl = "https://play.google.com/store/apps/details?id=com.applaytechHousie";
-  const appStoreUrl  = "https://apps.apple.com/app/idYOUR_APP_ID"; // <-- replace
+const androidPackage = "com.applaytechHousie";
+const playStoreUrl = `https://play.google.com/store/apps/details?id=${androidPackage}`;
+const appStoreUrl  = "https://apps.apple.com/app/idYOUR_APP_ID";
 
-  const openBtn = document.getElementById("openBtn");
-  const loader = document.getElementById("loader");
-  const store = document.getElementById("store");
-  const desc = document.getElementById("desc");
+const openBtn = document.getElementById("openBtn");
+const loader = document.getElementById("loader");
+const store = document.getElementById("store");
+const desc = document.getElementById("desc");
 
-  let appOpened = false;
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) appOpened = true;
-  });
-
-  function showStore() {
-    loader.style.display = "none";
-    store.style.display = "block";
-    desc.textContent = "Looks like you don’t have the app yet.";
-
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
-    const isAndroid = /android/i.test(ua);
-    const isiOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
-
-    if (isAndroid) {
-      document.getElementById("play-store").href = playStoreUrl;
-      document.getElementById("app-store").style.display = "none";
-    } else if (isiOS) {
-      document.getElementById("app-store").href = appStoreUrl;
-      document.getElementById("play-store").style.display = "none";
-    } else {
-      document.getElementById("play-store").href = playStoreUrl;
-      document.getElementById("app-store").href = appStoreUrl;
-    }
+openBtn.addEventListener("click", () => {
+  if (!code) {
+    desc.textContent = "Invalid link. Please request a new invite.";
+    return;
   }
 
-  function showError(msg) {
-    loader.style.display = "none";
-    desc.textContent = msg;
-  }
+  const deepLink = `housie://join?code=${encodeURIComponent(code)}`;
 
-  function start() {
-    if (!code) {
-      showError("Invalid link. Please request a new invite.");
-      return;
-    }
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+  const isAndroid = /android/i.test(ua);
+  const isiOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
 
-    const deepLink = `housie://join?code=${encodeURIComponent(code)}`;
-    openBtn.href = deepLink;
-
-    // Attempt to open app
-    window.location.href = deepLink;
-
-    // Fallback to store if app didn't open
+  if (isiOS) {
+    // iOS: try to open app, fallback after 2s
+    window.location = deepLink;
     setTimeout(() => {
-      if (!appOpened) showStore();
-    }, 2500);
-  }
+      showStore();
+    }, 2000);
+  } else if (isAndroid) {
+    // Android Chrome: use intent URL
+    const intentLink = `intent://join?code=${encodeURIComponent(code)}#Intent;scheme=housie;package=${androidPackage};end`;
+    window.location = intentLink;
 
-  window.onload = start;
+    // fallback after 2s
+    setTimeout(() => {
+      showStore();
+    }, 2000);
+  } else {
+    // Desktop
+    showStore();
+  }
+});
+
+function showStore() {
+  loader.style.display = "none";
+  store.style.display = "block";
+  desc.textContent = "Looks like you don’t have the app yet.";
+
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+  const isAndroid = /android/i.test(ua);
+  const isiOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+
+  if (isAndroid) {
+    document.getElementById("play-store").href = playStoreUrl;
+    document.getElementById("app-store").style.display = "none";
+  } else if (isiOS) {
+    document.getElementById("app-store").href = appStoreUrl;
+    document.getElementById("play-store").style.display = "none";
+  } else {
+    document.getElementById("play-store").href = playStoreUrl;
+    document.getElementById("app-store").href = appStoreUrl;
+  }
+}
 </script>
 
 </body>
