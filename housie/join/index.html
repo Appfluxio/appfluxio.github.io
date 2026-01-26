@@ -275,258 +275,275 @@ openBtn.addEventListener("click", () => {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Open Housie</title>
-  <meta name="description" content="Join your Housie game instantly. Open the app or download it in one tap." />
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: radial-gradient(circle at top, #1f2937, #020617);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      padding: 20px;
-    }
-    .card {
-      width: 100%;
-      max-width: 420px;
-      background: rgba(255, 255, 255, 0.06);
-      backdrop-filter: blur(14px);
-      border-radius: 24px;
-      padding: 32px 26px 28px;
-      text-align: center;
-      box-shadow: 0 25px 60px rgba(0,0,0,.4);
-    }
-    .logo {
-      width: 84px;
-      height: 84px;
-      border-radius: 20px;
-      margin-bottom: 24px;
-      box-shadow: 0 12px 30px rgba(0,0,0,.4);
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 42px;
-      font-weight: 800;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    h1 {
-      margin: 0 0 8px;
-      font-size: 24px;
-      font-weight: 700;
-    }
-    #desc {
-      font-size: 15px;
-      opacity: 0.85;
-      margin-bottom: 22px;
-      line-height: 1.5;
-    }
-    .main-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      height: 56px;
-      width: 100%;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: #fff;
-      font-weight: 700;
-      font-size: 16px;
-      text-decoration: none;
-      margin-bottom: 20px;
-      box-shadow: 0 10px 25px rgba(34,197,94,.4);
-      transition: all .2s ease;
-      cursor: pointer;
-      border: none;
-    }
-    .main-btn:active {
-      transform: scale(.97);
-      box-shadow: 0 6px 18px rgba(34,197,94,.3);
-    }
-    .loading-area {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      margin-top: 10px;
-    }
-    .spinner {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      border: 3px solid rgba(255,255,255,.1);
-      border-top-color: #22c55e;
-      animation: spin .8s linear infinite;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    .loading-text {
-      font-size: 13px;
-      opacity: .6;
-    }
-    .store-section {
-      display: none;
-      margin-top: 24px;
-      padding-top: 24px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-    }
-    .store-title {
-      font-size: 13px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      opacity: .5;
-      margin-bottom: 16px;
-    }
-    .badge-grid {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-    }
-    .badge-img {
-      height: 44px;
-      transition: transform .2s ease;
-    }
-    .badge-img:hover {
-      transform: translateY(-2px);
-    }
-    .footer {
-      margin-top: 30px;
-      font-size: 11px;
-      opacity: .4;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Open Housie</title>
+    <meta name="description" content="Join your Housie game instantly. Open the app or download it in one tap." />
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at top, #1f2937, #020617);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            padding: 20px;
+        }
+        .card {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(14px);
+            border-radius: 24px;
+            padding: 32px 26px 28px;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, .4);
+        }
+        .logo {
+            width: 84px;
+            height: 84px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, .4);
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            font-weight: 800;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h1 {
+            margin: 0 0 8px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        #desc {
+            font-size: 15px;
+            opacity: 0.85;
+            margin-bottom: 22px;
+            line-height: 1.5;
+        }
+        .main-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 56px;
+            width: 100%;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(34, 197, 94, .4);
+            transition: all .2s ease;
+            cursor: pointer;
+            border: none;
+        }
+        .main-btn:active {
+            transform: scale(.97);
+            box-shadow: 0 6px 18px rgba(34, 197, 94, .3);
+        }
+        .loading-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, .1);
+            border-top-color: #22c55e;
+            animation: spin .8s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        .loading-text {
+            font-size: 13px;
+            opacity: .6;
+        }
+        .store-section {
+            display: none;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .store-title {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: .5;
+            margin-bottom: 16px;
+        }
+        .badge-grid {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+        .badge-img {
+            height: 44px;
+            transition: transform .2s ease;
+        }
+        .badge-img:hover {
+            transform: translateY(-2px);
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 11px;
+            opacity: .4;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
 </head>
 <body>
-<div class="card">
-  <div class="logo">H</div>
-  <h1>Housie Classic</h1>
-  <p id="desc">Ready to play? We're opening the game app for you now.</p>
-  <button id="openBtn" class="main-btn">OPEN APP MANUALLY</button>
-  <div class="loading-area" id="loader">
-    <div class="spinner"></div>
-    <div class="loading-text">Connecting to room...</div>
-  </div>
-  <div class="store-section" id="store">
-    <div class="store-title">App not installed?</div>
-    <div class="badge-grid">
-      <a id="play-store" href="#" target="_blank">
-        <img class="badge-img" src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play">
-      </a>
-      <a id="app-store" href="#" target="_blank">
-        <img class="badge-img" src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store">
-      </a>
+    <div class="card">
+        <div class="logo">H</div>
+        <h1>Housie Classic</h1>
+        <p id="desc">Ready to play? We're opening the game app for you now.</p>
+        <button id="openBtn" class="main-btn">OPEN APP MANUALLY</button>
+        <div class="loading-area" id="loader">
+            <div class="spinner"></div>
+            <div class="loading-text">Connecting to room...</div>
+        </div>
+        <div class="store-section" id="store">
+            <div class="store-title">App not installed?</div>
+            <div class="badge-grid">
+                <a id="play-store" href="#" target="_blank">
+                    <img class="badge-img"
+                        src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                        alt="Google Play">
+                </a>
+                <a id="app-store" href="#" target="_blank">
+                    <img class="badge-img"
+                        src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
+                        alt="App Store">
+                </a>
+            </div>
+        </div>
+        <div class="footer">
+            Multiplayer Tambola Experience
+        </div>
     </div>
-  </div>
-  <div class="footer">
-    Multiplayer Tambola Experience
-  </div>
-</div>
-<script>
-    // 1. CONFIGURATION
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
-    const androidPackage = "com.applaytechHousie";
-    const appStoreUrl = "http://housie.applaytech.com/"; // Replace with real Apple Store URL later
-    const playStoreUrl = `https://play.google.com/store/apps/details?id=${androidPackage}`;
-    const openBtn = document.getElementById("openBtn");
-    const loader = document.getElementById("loader");
-    const store = document.getElementById("store");
-    const desc = document.getElementById("desc");
-    // 2. DETECTION
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
-    const isAndroid = /android/i.test(ua);
-    const isiOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
-    function getDeepLink() {
-        if (!code) return null;
-        return `housie://join?code=${encodeURIComponent(code)}`;
-    }
-    function getIntentLink() {
-        if (!code) return null;
-        // The most robust format for Android Chrome:
-        // intent://join/?code=XYZ#Intent;scheme=housie;package=com.applaytechHousie;S.browser_fallback_url=PLAYSTORE_URL;end;
-        return `intent://join/?code=${encodeURIComponent(code)}#Intent;scheme=housie;package=${androidPackage};S.browser_fallback_url=${encodeURIComponent(playStoreUrl)};end;`;
-    }
-    function showStoreArea() {
-        loader.style.display = "none";
-        store.style.display = "block";
-        desc.textContent = "We couldn't open the app automatically.";
-        
-        if (isAndroid) {
-            document.getElementById("play-store").href = playStoreUrl;
-            document.getElementById("app-store").style.display = "none";
-        } else if (isiOS) {
-            document.getElementById("app-store").href = appStoreUrl;
-            document.getElementById("play-store").style.display = "none";
-        } else {
-            document.getElementById("play-store").href = playStoreUrl;
-            document.getElementById("app-store").href = appStoreUrl;
+    <script>
+        // 1. CONFIGURATION
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get("code");
+        const androidPackage = "com.applaytechHousie";
+        const appStoreUrl = "http://housie.applaytech.com/"; // Replace with real Apple Store URL later
+        const playStoreUrl = `https://play.google.com/store/apps/details?id=${androidPackage}`;
+        const openBtn = document.getElementById("openBtn");
+        const loader = document.getElementById("loader");
+        const store = document.getElementById("store");
+        const desc = document.getElementById("desc");
+        // 2. DETECTION
+        const ua = navigator.userAgent || navigator.vendor || window.opera;
+        const isAndroid = /android/i.test(ua);
+        const isiOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+        function getDeepLink() {
+            if (!code) return null;
+            return `housie://join?code=${encodeURIComponent(code)}`;
         }
-    }
-    // 3. REDIRECTION LOGIC
-    function attemptOpen() {
-        if (!code) {
-            desc.textContent = "Invalid game link. Please ask the host for a new invite.";
+        function getIntentLink() {
+            if (!code) return null;
+            // The most robust format for Android Chrome:
+            // intent://join/?code=XYZ#Intent;scheme=housie;package=com.applaytechHousie;S.browser_fallback_url=PLAYSTORE_URL;end;
+            return `intent://join/?code=${encodeURIComponent(code)}#Intent;scheme=housie;package=${androidPackage};S.browser_fallback_url=${encodeURIComponent(playStoreUrl)};end;`;
+        }
+        function showStoreArea() {
             loader.style.display = "none";
-            openBtn.style.display = "none";
-            return;
+            store.style.display = "block";
+            desc.textContent = "We couldn't open the app automatically.";
+            if (isAndroid) {
+                document.getElementById("play-store").href = playStoreUrl;
+                document.getElementById("app-store").style.display = "none";
+            } else if (isiOS) {
+                document.getElementById("app-store").href = appStoreUrl;
+                document.getElementById("play-store").style.display = "none";
+            } else {
+                document.getElementById("play-store").href = playStoreUrl;
+                document.getElementById("app-store").href = appStoreUrl;
+            }
         }
-        const deepLink = getDeepLink();
-        const intentLink = getIntentLink();
-        if (isAndroid) {
-            // Android uses Intent URL for highest reliability in Chrome
-            window.location.href = intentLink;
-        } else if (isiOS) {
-            // iOS uses standard Custom Scheme
-            window.location.href = deepLink;
-        } else {
-            // Desktop just shows store
-            showStoreArea();
-            return;
+        // 3. REDIRECTION LOGIC
+        function attemptOpen() {
+            if (!code) {
+                desc.textContent = "Invalid game link. Please ask the host for a new invite.";
+                loader.style.display = "none";
+                openBtn.style.display = "none";
+                return;
+            }
+            const deepLink = getDeepLink();
+            // Exact intent match for: <data android:scheme="housie" android:host="join" />
+            const intentLink = `intent://join?code=${encodeURIComponent(code)}#Intent;scheme=housie;package=${androidPackage};S.browser_fallback_url=${encodeURIComponent(playStoreUrl)};end;`;
+            if (isAndroid) {
+                // Android: DO NOT auto-redirect. Force user click to avoid instant Play Store jump.
+                loader.style.display = "none";
+                desc.textContent = "Click the button below to join the game!";
+            } else if (isiOS) {
+                // iOS: Auto-redirect often works without a gesture
+                window.location.href = deepLink;
+                // Logic to detect if app opened or not (iOS specific)
+                const start = Date.now();
+                const checkInterval = setInterval(() => {
+                    if (document.hidden || Date.now() - start > 3500) {
+                        clearInterval(checkInterval);
+                        if (!document.hidden) {
+                            showStoreArea();
+                        }
+                    }
+                }, 100);
+            } else {
+                showStoreArea();
+            }
         }
-        // Logic to detect if app opened or not
-        const start = Date.now();
-        const checkInterval = setInterval(() => {
-            if (document.hidden || Date.now() - start > 3500) {
-                clearInterval(checkInterval);
+        // 4. EVENTS
+        window.addEventListener("load", () => {
+            attemptOpen();
+        });
+        openBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            const deepLink = getDeepLink();
+            const intentLink = `intent://join?code=${encodeURIComponent(code)}#Intent;scheme=housie;package=${androidPackage};S.browser_fallback_url=${encodeURIComponent(playStoreUrl)};end;`;
+            if (isAndroid) {
+                window.location.href = intentLink;
+            } else {
+                window.location.href = deepLink;
+            }
+            // Show store after 3s if user still on page
+            setTimeout(() => {
                 if (!document.hidden) {
                     showStoreArea();
                 }
+            }, 3000);
+        });
+        // Detect if user coming back to page (app was potentially backgrounded)
+        document.addEventListener("visibilitychange", () => {
+            if (!document.hidden) {
+                // If they are back but ad area not shown, show it now
+                setTimeout(() => {
+                    if (store.style.display !== "block") {
+                        showStoreArea();
+                    }
+                }, 1000);
             }
-        }, 100);
-    }
-    // 4. EVENTS
-    window.addEventListener("load", () => {
-        // Brief delay before auto-redirect to allow UI to render
-        setTimeout(attemptOpen, 500);
-    });
-    openBtn.addEventListener("click", () => {
-        attemptOpen();
-    });
-    // Detect if user coming back to page (app was potentially backgrounded)
-    document.addEventListener("visibilitychange", () => {
-        if (!document.hidden) {
-            // If they are back but ad area not shown, show it now
-            setTimeout(() => {
-                if (store.style.display !== "block") {
-                    showStoreArea();
-                }
-            }, 1000);
-        }
-    });
-</script>
+        });
+    </script>
 </body>
 </html>
 
