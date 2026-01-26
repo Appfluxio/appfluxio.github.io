@@ -233,8 +233,16 @@ window.addEventListener("load", () => {
 
   } else if (isAndroid) {
     // Android Chrome: use intent URL
-    const intentLink = `intent://join?code=${encodeURIComponent(code)}#Intent;scheme=housie;package=${androidPackage};end`;
-    const start = Date.now();
+    // const intentLink = `intent://join?code=${encodeURIComponent(code)}#Intent;scheme=housie;package=${androidPackage};end`;
+    // const start = Date.now();
+    // window.location = intentLink;
+
+     const intentLink = `intent://join/?code=${encodeURIComponent(code)}#Intent;scheme=housie;package=${androidPackage};end;`;
+
+     const start = Date.now();
+    // Optional: Log it for debugging if you want
+    console.log("Opening Intent:", intentLink);
+    
     window.location = intentLink;
 
     // Fallback to Play Store after 2s
