@@ -138,41 +138,39 @@
 </head>
 <body>
 
-  <div class="card">
-    <img class="logo" src="https://dummyimage.com/160x160/22c55e/ffffff&text=H" alt="Housie" />
-    <h1>Opening Housie…</h1>
-    <p id="desc">Hang tight while we connect you to your game.</p>
+<div class="card">
+  <img class="logo" src="https://dummyimage.com/160x160/22c55e/ffffff&text=H" alt="Housie" />
+  <h1>Opening Housie…</h1>
+  <p id="desc">Hang tight while we connect you to your game.</p>
 
-    <a id="openBtn" href="#" class="main-btn">
-      OPEN IN HOUSIE
-    </a>
+  <a id="openBtn" href="#" class="main-btn">OPEN IN HOUSIE</a>
 
-    <div class="loading-area" id="loader">
-      <div class="spinner"></div>
-      <div class="loading-text">Verifying app…</div>
-    </div>
+  <div class="loading-area" id="loader">
+    <div class="spinner"></div>
+    <div class="loading-text">Verifying app…</div>
+  </div>
 
-    <div class="store-section" id="store">
-      <div class="store-title">App not installed?</div>
-      <div class="badge-grid">
-        <a id="play-store" href="#" target="_blank" rel="noopener">
-          <img class="badge-img"
-               src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
-               alt="Get it on Google Play">
-        </a>
+  <div class="store-section" id="store">
+    <div class="store-title">App not installed?</div>
+    <div class="badge-grid">
+      <a id="play-store" href="#" target="_blank" rel="noopener">
+        <img class="badge-img"
+             src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+             alt="Get it on Google Play">
+      </a>
 
-        <a id="app-store" href="#" target="_blank" rel="noopener">
-          <img class="badge-img"
-               src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
-               alt="Download on the App Store">
-        </a>
-      </div>
-    </div>
-
-    <div class="footer">
-      Professional Tambola & Bingo Experience
+      <a id="app-store" href="#" target="_blank" rel="noopener">
+        <img class="badge-img"
+             src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
+             alt="Download on the App Store">
+      </a>
     </div>
   </div>
+
+  <div class="footer">
+    Professional Tambola & Bingo Experience
+  </div>
+</div>
 
 <script>
 const params = new URLSearchParams(window.location.search);
@@ -180,45 +178,12 @@ const code = params.get("code");
 
 const androidPackage = "com.applaytechHousie";
 const playStoreUrl = `https://play.google.com/store/apps/details?id=${androidPackage}`;
-const appStoreUrl  = "https://apps.apple.com/app/idYOUR_APP_ID";
+const appStoreUrl  = "https://apps.apple.com/app/idYOUR_APP_ID"; // replace with real ID
 
 const openBtn = document.getElementById("openBtn");
 const loader = document.getElementById("loader");
 const store = document.getElementById("store");
 const desc = document.getElementById("desc");
-
-openBtn.addEventListener("click", () => {
-  if (!code) {
-    desc.textContent = "Invalid link. Please request a new invite.";
-    return;
-  }
-
-  const deepLink = `housie://join?code=${encodeURIComponent(code)}`;
-
-  const ua = navigator.userAgent || navigator.vendor || window.opera;
-  const isAndroid = /android/i.test(ua);
-  const isiOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
-
-  if (isiOS) {
-    // iOS: try to open app, fallback after 2s
-    window.location = deepLink;
-    setTimeout(() => {
-      showStore();
-    }, 2000);
-  } else if (isAndroid) {
-    // Android Chrome: use intent URL
-    const intentLink = `intent://join?code=${encodeURIComponent(code)}#Intent;scheme=housie;package=${androidPackage};end`;
-    window.location = intentLink;
-
-    // fallback after 2s
-    setTimeout(() => {
-      showStore();
-    }, 2000);
-  } else {
-    // Desktop
-    showStore();
-  }
-});
 
 function showStore() {
   loader.style.display = "none";
@@ -240,6 +205,55 @@ function showStore() {
     document.getElementById("app-store").href = appStoreUrl;
   }
 }
+
+// Attempt to open app automatically on page load
+window.addEventListener("load", () => {
+  if (!code) {
+    desc.textContent = "Invalid link. Please request a new invite.";
+    loader.style.display = "none";
+    return;
+  }
+
+  const deepLink = `housie://join?code=${encodeURIComponent(code)}`;
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+  const isAndroid = /android/i.test(ua);
+  const isiOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+
+  if (isiOS) {
+    // iOS: automatic deep link
+    const start = Date.now();
+    window.location = deepLink;
+
+    // Fallback to App Store after 2s if app not installed
+    setTimeout(() => {
+      if (Date.now() - start < 2500) {
+        showStore();
+      }
+    }, 2000);
+
+  } else if (isAndroid) {
+    // Android Chrome: use intent URL
+    const intentLink = `intent://join?code=${encodeURIComponent(code)}#Intent;scheme=housie;package=${androidPackage};end`;
+    const start = Date.now();
+    window.location = intentLink;
+
+    // Fallback to Play Store after 2s
+    setTimeout(() => {
+      if (Date.now() - start < 2500) {
+        showStore();
+      }
+    }, 2000);
+
+  } else {
+    // Desktop
+    showStore();
+  }
+});
+
+// Optional: still allow user click to retry
+openBtn.addEventListener("click", () => {
+  window.location.reload();
+});
 </script>
 
 </body>
