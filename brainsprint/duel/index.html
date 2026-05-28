@@ -1,1 +1,187 @@
 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Open BrainSprint Duel</title>
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+    .card {
+      width: 100%;
+      max-width: 520px;
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 14px;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 22px;
+    }
+    p {
+      margin: 0 0 14px;
+      color: #94a3b8;
+      line-height: 1.45;
+    }
+    .meta {
+      font-size: 13px;
+      color: #a5b4fc;
+      word-break: break-all;
+      margin: 8px 0 18px;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      appearance: none;
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .btn.primary {
+      background: #3b82f6;
+      color: #fff;
+    }
+    .btn.secondary {
+      background: #1f2937;
+      color: #e5e7eb;
+      border: 1px solid #374151;
+    }
+    .hint {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Opening BrainSprint...</h1>
+    <p>If the app is installed, it should open automatically. If not, you'll be redirected to the store.</p>
+    <div id="duelMeta" class="meta">Reading duel invite...</div>
+
+    <div class="row">
+      <button id="openBtn" class="btn primary">Open App</button>
+      <button id="storeBtn" class="btn secondary">Go to Store</button>
+    </div>
+
+    <div class="hint">
+      Android: redirects to Google Play if app isn't installed.<br />
+      iOS: placeholder store URL is used for now.
+    </div>
+  </div>
+
+  <script>
+    // ====== CONFIG (update later) ======
+    const ANDROID_PACKAGE = "com.applaytech.brainsprint";
+    const ANDROID_STORE_URL = `https://play.google.com/store/apps/details?id=${ANDROID_PACKAGE}`;
+
+    // Placeholder for now (replace after iOS app is live)
+    const IOS_STORE_URL = "https://apps.apple.com/app/idYOUR_IOS_APP_ID";
+
+    // Your app deep link format from Flutter code
+    // brainsprint://duel/<duelId>
+    const APP_SCHEME = "brainsprint://duel";
+
+    // Fallback delay (ms): time to allow app open before redirecting
+    const REDIRECT_DELAY = 1400;
+    // ================================
+
+    function getDuelId() {
+      const url = new URL(window.location.href);
+
+      // Supports ?duelId=abc
+      const queryDuelId = url.searchParams.get("duelId");
+      if (queryDuelId && queryDuelId.trim()) return queryDuelId.trim();
+
+      // Supports /brainsprint/duel/<id>
+      const parts = url.pathname.split("/").filter(Boolean);
+      const duelIndex = parts.findIndex((p) => p.toLowerCase() === "duel");
+      if (duelIndex >= 0 && parts[duelIndex + 1]) return parts[duelIndex + 1];
+
+      return "";
+    }
+
+    function isAndroid() {
+      return /Android/i.test(navigator.userAgent);
+    }
+
+    function isIOS() {
+      return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
+
+    function getStoreUrl() {
+      if (isAndroid()) return ANDROID_STORE_URL;
+      if (isIOS()) return IOS_STORE_URL;
+      // Desktop / unknown -> Android page for now
+      return ANDROID_STORE_URL;
+    }
+
+    function buildAppUrl(duelId) {
+      if (!duelId) return APP_SCHEME;
+      return `${APP_SCHEME}/${encodeURIComponent(duelId)}`;
+    }
+
+    function openAppThenFallback(duelId) {
+      const appUrl = buildAppUrl(duelId);
+      const storeUrl = getStoreUrl();
+
+      // If app opens, page usually gets hidden/backgrounded.
+      // We avoid store redirect when document becomes hidden.
+      let didHide = false;
+      const onVisibility = () => {
+        if (document.hidden) didHide = true;
+      };
+      document.addEventListener("visibilitychange", onVisibility);
+
+      // Try open app
+      window.location.href = appUrl;
+
+      // Fallback to store
+      setTimeout(() => {
+        document.removeEventListener("visibilitychange", onVisibility);
+        if (!didHide) {
+          window.location.href = storeUrl;
+        }
+      }, REDIRECT_DELAY);
+    }
+
+    (function init() {
+      const duelId = getDuelId();
+      const duelMeta = document.getElementById("duelMeta");
+      const openBtn = document.getElementById("openBtn");
+      const storeBtn = document.getElementById("storeBtn");
+
+      duelMeta.textContent = duelId
+        ? `Duel ID: ${duelId}`
+        : "No duelId found in URL. App will open without duel context.";
+
+      openBtn.addEventListener("click", () => openAppThenFallback(duelId));
+      storeBtn.addEventListener("click", () => {
+        window.location.href = getStoreUrl();
+      });
+
+      // Auto-open immediately
+      openAppThenFallback(duelId);
+    })();
+  </script>
+</body>
+</html>
