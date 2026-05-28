@@ -8,5 +8,13 @@
        "87:1F:C4:71:7E:24:C6:C8:E8:5B:75:34:B5:34:FE:6B:E6:21:60:42:75:1E:C2:37:BF:99:16:BE:58:89:4B:81"
       ]
     }
+  },
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.applaytech.brainsprint",
+      "sha256_cert_fingerprints": ["BRAINSPRINT_SHA256"]
+    }
   }
 ]
