@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -97,7 +96,7 @@
     const APP_SCHEME = "brainsprint://duel";
 
     // Fallback delay (ms): time to allow app open before redirecting
-    const REDIRECT_DELAY = 1400;
+    const REDIRECT_DELAY = 1500;
     // ================================
 
     function getDuelId() {
@@ -139,21 +138,36 @@
       const appUrl = buildAppUrl(duelId);
       const storeUrl = getStoreUrl();
 
-      // If app opens, page usually gets hidden/backgrounded.
-      // We avoid store redirect when document becomes hidden.
+      const start = Date.now();
       let didHide = false;
-      const onVisibility = () => {
-        if (document.hidden) didHide = true;
+
+      const onHide = () => {
+        didHide = true;
       };
-      document.addEventListener("visibilitychange", onVisibility);
+
+      // iOS Safari loses focus ("blur") or hides when "Open in App" prompt appears
+      window.addEventListener("pagehide", onHide);
+      window.addEventListener("blur", onHide);
+      document.addEventListener("visibilitychange", onHide);
+      document.addEventListener("webkitvisibilitychange", onHide);
 
       // Try open app
       window.location.href = appUrl;
 
       // Fallback to store
       setTimeout(() => {
-        document.removeEventListener("visibilitychange", onVisibility);
-        if (!didHide) {
+        // Clean up listeners
+        window.removeEventListener("pagehide", onHide);
+        window.removeEventListener("blur", onHide);
+        document.removeEventListener("visibilitychange", onHide);
+        document.removeEventListener("webkitvisibilitychange", onHide);
+
+        const elapsed = Date.now() - start;
+
+        // Only redirect to App Store if:
+        // 1. The page never lost focus / hid (didHide is false)
+        // 2. The JS execution was NOT frozen/paused by opening the app (elapsed matches delay)
+        if (!didHide && elapsed < REDIRECT_DELAY + 250) {
           window.location.href = storeUrl;
         }
       }, REDIRECT_DELAY);
