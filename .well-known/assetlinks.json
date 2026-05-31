@@ -15,7 +15,8 @@
       "namespace": "android_app",
       "package_name": "com.applaytech.brainsprint",
       "sha256_cert_fingerprints": [
-        "87:1F:C4:71:7E:24:C6:C8:E8:5B:75:34:B5:34:FE:6B:E6:21:60:42:75:1E:C2:37:BF:99:16:BE:58:89:4B:81"
+        "87:1F:C4:71:7E:24:C6:C8:E8:5B:75:34:B5:34:FE:6B:E6:21:60:42:75:1E:C2:37:BF:99:16:BE:58:89:4B:81",
+        "70:8A:F5:B4:42:93:D0:9B:30:61:AB:EB:18:15:A0:47:85:05:DA:6F:A4:10:FA:CC:BE:D6:30:4B:84:F0:EF:D9"
         ]
     }
   }
