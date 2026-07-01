@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -48,39 +47,27 @@
             font-size: 16px;
             box-shadow: 0 6px 20px rgba(249, 129, 19, 0.3); 
             transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
         }
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(249, 129, 19, 0.4); 
         }
-        .divider {
-            margin: 40px 0 24px 0;
-            border: 0;
-            border-top: 1px solid #eee;
-            position: relative;
-        }
-        .divider::after {
-            content: "OR DOWNLOAD THE APP";
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: white;
-            padding: 0 12px;
-            color: #999;
-            font-size: 11px;
-            font-weight: bold;
-            letter-spacing: 1px;
+        .status-msg {
+            font-size: 13px;
+            color: #888;
+            margin-top: 16px;
+            font-style: italic;
         }
         .store-badges {
             display: flex;
             justify-content: center;
             gap: 16px;
             flex-wrap: wrap;
-            margin-top: 16px;
+            margin-top: 24px;
         }
         .store-btn img {
-            height: 44px;
+            height: 40px;
             transition: transform 0.2s;
         }
         .store-btn:hover img {
@@ -93,23 +80,75 @@
         <h1>Housie Classic</h1>
         <p>Tambola Bingo with Friends</p>
         
-        <p>If you already have the app installed, tap below to open and join automatically:</p>
-        <a href="housie-classic.app://join" class="btn">OPEN IN APP</a>
-        
-        <hr class="divider">
-        
-        <p style="font-size: 14px; margin-bottom: 16px; color: #888;">Select your store to install the game:</p>
+        <div id="action-area">
+            <p id="info-text">Connecting you to the game...</p>
+            <a onclick="tryOpenApp()" class="btn">OPEN IN APP</a>
+            <p id="status" class="status-msg">Attempting to open Housie Classic...</p>
+        </div>
+
         <div class="store-badges">
-            <!-- Google Play Store -->
             <a href="https://play.google.com/store/apps/details?id=com.applaytechHousie" class="store-btn" target="_blank">
                 <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play">
             </a>
-            
-            <!-- Apple App Store -->
-            <a href="https://apps.apple.com/app/id" class="store-btn" target="_blank">
-                <img src="https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-app-store.svg" alt="Download on the App Store" style="padding: 5px 0; height: 34px;">
+            <a href="https://apps.apple.com/app/idYOUR_APPLE_APP_ID" class="store-btn" target="_blank">
+                <img src="https://developer.apple.com/app-store/marketing/guidelines/images/badge-download-on-the-app-store.svg" alt="Download on the App Store" style="padding: 4px 0; height: 32px;">
             </a>
         </div>
     </div>
+
+    <script>
+        const appUri = "housie-classic.app://join";
+        const playStoreUrl = "https://play.google.com/store/apps/details?id=com.applaytechHousie";
+        const appStoreUrl = "https://apps.apple.com/app/idYOUR_APPLE_APP_ID";
+
+        function getMobileStoreUrl() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            if (/android/i.test(userAgent)) {
+                return playStoreUrl;
+            }
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                return appStoreUrl;
+            }
+            // For iPads running newer iOS versions that masquerade as desktop Safari
+            if (navigator.maxTouchPoints && navigator.maxTouchPoints > 2 && /Macintosh/.test(userAgent)) {
+                return appStoreUrl;
+            }
+            return null; // Desktop or other
+        }
+
+        function tryOpenApp() {
+            document.getElementById("status").innerText = "Opening the app...";
+            
+            // Try to deep link into the app
+            window.location.href = appUri;
+
+            // Start a timer. If browser stays active (page visible), redirect to store.
+            const start = Date.now();
+            setTimeout(function() {
+                // If the user was navigated away (app opened), the time elapsed will be large,
+                // or document.hidden will be true. If not, redirect.
+                if (Date.now() - start < 2000 && !document.hidden) {
+                    const storeUrl = getMobileStoreUrl();
+                    if (storeUrl) {
+                        document.getElementById("status").innerText = "App not found. Redirecting to App Store...";
+                        window.location.href = storeUrl;
+                    } else {
+                        document.getElementById("status").innerText = "App link sent. If nothing happened, download the app below.";
+                    }
+                }
+            }, 1500);
+        }
+
+        // Automatically attempt to open the app on page load
+        window.onload = function() {
+            // Only auto-trigger if on mobile
+            if (getMobileStoreUrl()) {
+                tryOpenApp();
+            } else {
+                document.getElementById("info-text").innerText = "Play Tambola Housie Classic with friends!";
+                document.getElementById("status").innerText = "Download the app using the store links below.";
+            }
+        };
+    </script>
 </body>
 </html>
